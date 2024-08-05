@@ -1,0 +1,21 @@
+provider "virtualbox" {
+  # Configuration options
+}
+
+resource "virtualbox_vm" "vm1" {
+  name   = "test-vm"
+  os_type = "Linux_64"
+  vm_settings {
+    cpus  = 2
+    memory = 1024
+  }
+
+  network_adapter {
+    type           = "bridged"
+    bridge_adapter = "en0"
+  }
+
+  disk {
+    size = 10000
+  }
+}
