@@ -1,21 +1,29 @@
-provider "virtualbox" {
-  # Configuration options
+terraform {
+  required_providers {
+    virtualbox = {
+      source = "terra-farm/virtualbox"
+      version = "0.2.2" # Use the latest version available
+    }
+  }
 }
 
-resource "virtualbox_vm" "vm1" {
-  name   = "test-vm"
-  os_type = "Linux_64"
-  vm_settings {
-    cpus  = 2
-    memory = 1024
-  }
+provider "virtualbox" {
+  # Configuration options (if any)
+}
+
+resource "virtualbox_vm" "my_vm" {
+  name      = "my-vm"
+  os_type   = "Ubuntu_64"
+  cpus      = 2
+  memory    = 1024
+  vram      = 12
 
   network_adapter {
-    type           = "bridged"
-    bridge_adapter = "en0"
+    type           = "hostonly"
+    host_interface = "vboxnet0"
   }
 
   disk {
-    size = 10000
+    size = 10240 # Size in MB
   }
 }
