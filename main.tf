@@ -1,31 +1,41 @@
 terraform {
   required_providers {
-    virtualbox = {
-      source = "shekeriev/virtualbox"
-      version = "0.0.4"
+    proxmox = {
+      source = "Telmate/proxmox"
+      version = "2.9.11"
     }
   }
 }
 
-# There are currently no configuration options for the provider itself.
+provider "proxmox" {
+  pm_api_url      = "https://192.168.81.2:8006/api2/json"
+  pm_user         = "root@pam"
+  pm_password     = "Salah@2021"
+  pm_tls_insecure = true
+}
 
-resource "virtualbox_vm" "node" {
-  count     = 1
-  name      = "master-k8s-node"
-  image     = "https://app.vagrantup.com/ubuntu/boxes/bionic64/versions/20180903.0.0/providers/virtualbox.box"
-  cpus      = 1
-  memory    = 512
+resource "proxmox_vm_qemu" "my_vm" {
+  name        = "my-vm"
+  target_node = "CentosCICD1"
+  clone       = "CentOS-7-x86_64-DVD-2009__1_.iso"
 
-  network_adapter {
-    type           = "hostonly"
-    host_interface = "vboxnet1"
+  os_type     = "qemu"
+
+  cores       = 2
+  memory      = 2048
+  sockets     = 1
+  scsihw      = "virtio-scsi-pci"
+
+
+  network {
+    model = "virtio"
+    bridge = "vmbr0"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      network.0.macaddr,
+    ]
   }
 }
 
-output "IPAddr" {
-  value = element(virtualbox_vm.node.*.network_adapter.0.ipv4_address, 0)
-}
-
-output "IPAddr_2" {
-  value = element(virtualbox_vm.node.*.network_adapter.0.ipv4_address, 1)
-}
