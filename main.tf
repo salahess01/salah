@@ -16,7 +16,7 @@ provider "proxmox" {
 
 resource "proxmox_vm_qemu" "my_vm" {
   name        = "my-vm"
-  target_node = "CentosCICD1"
+  target_node = "likan"
   iso       = "CentOS-7-x86_64-DVD-2009__1_.iso"
 
   os_type     = "qemu"
