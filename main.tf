@@ -13,7 +13,7 @@ resource "virtualbox_vm" "node" {
   count     = 1
   name      = "master-k8s-node"
   image     = "https://app.vagrantup.com/ubuntu/boxes/bionic64/versions/20180903.0.0/providers/virtualbox.box"
-  cpus      = 2
+  cpus      = 1
   memory    = "512 mib"
 
   network_adapter {
